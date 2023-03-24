@@ -25,8 +25,8 @@ jobs:
         proxy_port: ${{ secrets.PROXY_PORT }}
         envs: POD
         script: |
-          echo "JSONPATH='{range .items[*]}{" \n"}{@.metadata.name} :{range @.status.conditions[*]}{@.type}={@.status};{end}{end}' 
-          && kubectl get pods -o jsonpath="$JSONPATH" | grep "Ready=False" | awk '{print $1}'" >> $GITHUB_OUTPUT
+          JSONPATH='{range .items[*]}{" \n"}{@.metadata.name} :{range @.status.conditions[*]}{@.type}={@.status};{end}{end}' 
+          && kubectl get pods -o jsonpath="$JSONPATH" | grep "Ready=False" | awk '{print $1}'
    
     - name: Send Slack notification
       uses: rtCamp/action-slack-notify@v2
