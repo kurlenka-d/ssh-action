@@ -1,7 +1,10 @@
 name: remote ssh command
 on:
  workflow_dispatch:
-
+ 
+env: 
+    pod: pod.log
+    
 
 jobs:
 
@@ -24,7 +27,9 @@ jobs:
         proxy_key: ${{ secrets.PROXY_KEY }}
         proxy_port: ${{ secrets.PROXY_PORT }}
         envs: POD
-        script: JSONPATH='{range .items[*]}{" \n"}{@.metadata.name} :{range @.status.conditions[*]}{@.type}={@.status};{end}{end}' && kubectl get pods -o jsonpath="$JSONPATH" | grep "Ready=False" | awk '{print $1}'
+        script: |
+         JSONPATH='{range .items[*]}{" \n"}{@.metadata.name} :{range @.status.conditions[*]}{@.type}={@.status};{end}{end}' && kubectl get pods -o jsonpath="$JSONPATH" | grep "Ready=False" | awk '{print $1}' >> ${{env.pod}}
+         echo "${{env.pod}}" >> $GITHUB_OUTPUT 
    
     - name: Send Slack notification
       uses: rtCamp/action-slack-notify@v2
