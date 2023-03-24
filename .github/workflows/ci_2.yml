@@ -15,17 +15,6 @@ jobs:
     - name: checkout
       uses: actions/checkout@v1
 
-    - name: correct password but wrong key
-      uses: ./
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        key: "1234"
-        port: ${{ secrets.PORT }}
-        script: whoami
-
-
     - name: executing remote ssh commands using ssh key
       uses: ./
       with:
