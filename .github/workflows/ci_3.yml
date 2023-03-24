@@ -3,7 +3,7 @@ on:
  workflow_dispatch:
 
 env:
-  POD: "POD.log"
+  POD: "POD"
   
 
 jobs:
@@ -28,13 +28,13 @@ jobs:
         proxy_port: ${{ secrets.PROXY_PORT }}
         envs: POD
         script: |
-          JSONPATH='{range .items[*]}{" \n"}{@.metadata.name} :{range @.status.conditions[*]}{@.type}={@.status};{end}{end}' 
-          kubectl get pods -o jsonpath="$JSONPATH" | grep "Ready=False" | awk '{print $1}' > $POD
+          POD=(JSONPATH='{range .items[*]}{" \n"}{@.metadata.name} :{range @.status.conditions[*]}{@.type}={@.status};{end}{end}' 
+          kubectl get pods -o jsonpath="$JSONPATH" | grep "Ready=False" | awk '{print $1}')
    
     - name: Send Slack notification
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_MESSAGE: 'You have crashed $POD pods!'
+        SLACK_MESSAGE: ${{POD}}'You have crashed!'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}          
 
   
