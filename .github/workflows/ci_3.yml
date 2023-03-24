@@ -34,7 +34,7 @@ jobs:
     - name: Send Slack notification
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_MESSAGE: 'You have crashed ${{POD}} pods!'
+        SLACK_MESSAGE: 'You have crashed $POD pods!'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}          
 
   
