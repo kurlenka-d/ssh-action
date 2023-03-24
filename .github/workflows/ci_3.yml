@@ -29,12 +29,12 @@ jobs:
         envs: POD
         script: |
           echo "JSONPATH='{range .items[*]}{" \n"}{@.metadata.name} :{range @.status.conditions[*]}{@.type}={@.status};{end}{end}' 
-          kubectl get pods -o jsonpath="$JSONPATH" | grep "Ready=False" | awk '{print $1}'" > $POD
+          kubectl get pods -o jsonpath="$JSONPATH" | grep "Ready=False" | awk '{print $1}'" > $GITHUB_OUTPUT
    
     - name: Send Slack notification
       uses: rtCamp/action-slack-notify@v2
       env:
-        SLACK_MESSAGE: ${{POD}}'You have crashed!'
+        SLACK_MESSAGE: $GITHUB_OUTPUT'You have crashed!'
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}          
 
   
